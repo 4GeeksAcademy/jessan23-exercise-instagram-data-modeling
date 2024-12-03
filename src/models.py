@@ -12,7 +12,7 @@ Base = declarative_base()
 class Follower(Base):
     __tablename__ = 'follower'
     user_from_id= Column(Integer, primary_key = True) 
-    user_to_id = Column(Integer)
+    user_to_id = Column(Integer, ForeignKey('user.id'))
 
 class User(Base):
     __tablename__ = 'user'
@@ -28,9 +28,7 @@ class Comment (Base):
     __tablename__ = 'comment'
     id = Column(Integer,primary_key = True)
     comment_text= Column(String (100), nullable=False)
-    autor_id = Column(Integer )
-    post_id = Column(Integer)
-    user_id = Column(Integer, ForeignKey('user.id'))
+    autor_id = Column(Integer, ForeignKey('user.id') )
     user = relationship(User)
     post_id= Column (Integer, ForeignKey('post.id'))
     post= relationship("Post")
@@ -39,14 +37,13 @@ class Comment (Base):
 class Post (Base):
     __tablename__ = 'post'
     id = Column(Integer,primary_key = True)
-    user_id= Column(Integer)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
 class Media (Base):
     __tablename__ = 'media'
     id = Column(Integer,primary_key = True)
-    type= Column(Enum, nullable=False)
+    type= Column(Enum('image','video','audio',name='media_type',))
     url = Column (String(300), nullable=False )
     post_id = Column(Integer, ForeignKey('post.id'))
     post = relationship(Post)
